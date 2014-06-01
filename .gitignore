@@ -1,0 +1,5 @@
+*.idea
+*.ips
+*.iml
+target
+.DS_store
