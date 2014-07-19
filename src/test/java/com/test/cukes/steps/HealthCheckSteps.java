@@ -8,7 +8,7 @@ import cucumber.api.java.en.When;
 import org.junit.Before;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.containsString;
 
 public class HealthCheckSteps {
 
