@@ -7,7 +7,8 @@ project.ext {
 }
 
 apply plugin: "java"
-sourceCompatibility = 1.6
+apply plugin: "war"
+sourceCompatibility = 1.7
 group = "com.test"
 version = "1.0"
 
@@ -49,8 +50,8 @@ apply plugin: "idea"
 
 idea {
     project {
-        jdkName = '1.6'
-        languageLevel = '1.6'
+        jdkName = '1.7'
+        languageLevel = '1.7'
         ipr {
 
             withXml { provider ->
@@ -84,17 +85,27 @@ buildscript {
     }
 }
 
+apply plugin: 'tomcat'
+apply plugin: 'tomcat-base'
+
+[tomcatRun, tomcatRunWar]*.httpPort = 8181
+[tomcatRun, tomcatStop]*.stopPort = 8182
+[tomcatRun, tomcatStop]*.stopKey = 'stopKey'
+[tomcatRunWar]*.warDirectory = "$buildDir/libs/spring-no-xml-1.0.war"
+[tomcatRun, tomcatRunWar]*.contextPath = "/"
+[tomcatRun]*.outputFile = file("$buildDir/tomcat-output")
+//[tomcatRun]*.daemon = true
+
 dependencies {
     compile "org.springframework:spring-webmvc:$project.springVersion"
     compile "javax.servlet:javax.servlet-api:3.0.1"
     testCompile "org.springframework:spring-test:$project.springVersion"
 
     testCompile configurations.cucumber
-    testCompile configurations.embeddedTomcat
     testCompile configurations.testing
-}
 
-apply plugin: "war"
+    tomcat configurations.embeddedTomcat
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = 1.11
@@ -107,18 +118,27 @@ test {
     exclude "com/test/cukes/**"
 }
 
-task acceptanceTestsLocal() {
-    dependsOn assemble, compileTestJava
-    doLast {
-        javaexec {
-            main = "cucumber.api.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', 'html:build/reports/tests/acceptance/local/html',
-                    '-f', 'json:build/reports/tests/acceptance/local/json/index.json',
-                    '-g','com/test/cukes/steps', 'src/test/resources',
-                    ]
-            jvmArgs = []
-        }
-    }
+task acceptanceTestsLocal(type: Test) {
+    dependsOn assemble, tomcatRun, compileTestJava
+
+    include "com/test/cukes/**"
+//    doLast {
+//        javaexec {
+//            main = "cucumber.api.cli.Main"
+//            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+//            args = ['-f', 'html:build/reports/tests/acceptance/local/html',
+//                    '-f', 'json:build/reports/tests/acceptance/local/json/index.json',
+//                    '-g','com/test/cukes/steps', 'src/test/resources',
+//                    ]
+//            jvmArgs = []
+//        }
+//    }
+
+    finalizedBy tomcatStop
+}
+
+task integrationTest(type: Test) {
+    include "**/*IT.*"
+    exclude "com/test/cukes/**"
 }
 
