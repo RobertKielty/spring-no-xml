@@ -23,10 +23,14 @@ There are two ways to build
   mvn clean install
 
 - gradle
-  in the root directory execute
-  `./gradlew wrapper //to use the gradle version in script`
-  `./gradlew init //Downloads the gradle version in script`
-  `./gradlew test acceptanceTestsLocal //runs unit tests, starts application and runs cucumber tests)`
+  in the root directory execute....
+
+  `//to use the gradle version in script`
+  `./gradlew wrapper`
+  `//Downloads the gradle version in script`
+  `./gradlew init`
+  `//runs unit tests, starts application and runs cucumber tests)`
+  `./gradlew test acceptanceTestsLocal`
 
   open in your favourite ide
   `./gradlew idea (generates idea files)`
