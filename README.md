@@ -24,13 +24,13 @@ There are two ways to build
 
 - gradle
   in the root directory execute
-  ./gradlew wrapper //to use the gradle version in script
-  ./gradlew init //Downloads the gradle version in script
-  ./gradlew test acceptanceTestsLocal //runs unit tests, starts application and runs cucumber tests)
+  `./gradlew wrapper //to use the gradle version in script`
+  `./gradlew init //Downloads the gradle version in script`
+  `./gradlew test acceptanceTestsLocal //runs unit tests, starts application and runs cucumber tests)`
 
   open in your favourite ide
-  ./gradlew idea (generates idea files)
-  ./gradlew eclipse (generates the eclipse files)
+  `./gradlew idea (generates idea files)`
+  `./gradlew eclipse (generates the eclipse files)`
 
 
  
